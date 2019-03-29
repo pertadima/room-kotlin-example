@@ -1,0 +1,3 @@
+[submodule "commonlib-android"]
+	path = commonlib-android
+	url = https://github.com/pertadima/commonlib-android.git
