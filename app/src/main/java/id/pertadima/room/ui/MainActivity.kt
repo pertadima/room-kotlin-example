@@ -15,6 +15,14 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onViewReady(savedInstanceState: Bundle?) {
+        observeViewModel()
+    }
 
+    private fun observeViewModel() {
+        with(mainViewModel) {
+            observeNoteList().onResult {
+
+            }
+        }
     }
 }
