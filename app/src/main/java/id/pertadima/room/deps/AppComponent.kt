@@ -7,6 +7,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
 import id.pertadima.room.MainApp
+import id.pertadima.room.deps.module.AppModule
 import javax.inject.Singleton
 
 /**

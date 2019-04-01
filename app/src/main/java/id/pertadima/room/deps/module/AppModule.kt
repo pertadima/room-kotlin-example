@@ -1,8 +1,9 @@
-package id.pertadima.room.deps
+package id.pertadima.room.deps.module
 
 import android.app.Application
 import dagger.Module
 import dagger.Provides
+import id.pertadima.room.deps.builder.ActivityBuilder
 import id.pertadima.room.room.NoteRepository
 import javax.inject.Singleton
 
@@ -22,6 +23,5 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun providesNoteInstanceRepository(application: Application): NoteRepository
-            = NoteRepository(application)
+    fun providesNoteInstanceRepository(application: Application): NoteRepository = NoteRepository(application)
 }

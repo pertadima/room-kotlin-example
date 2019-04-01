@@ -5,9 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import id.pertadima.room.room.entity.Note
 import androidx.room.Delete
-import io.reactivex.Single
+import id.pertadima.room.room.entity.Note
 
 
 /**
@@ -27,6 +26,6 @@ interface NoteDao {
     fun remove(note: Note)
 
     @Query("SELECT * FROM notes_table ")
-    fun getAllNotes(): Single<List<Note>>
+    fun getAllNotes(): LiveData<List<Note>>
 
 }

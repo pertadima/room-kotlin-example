@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import dagger.Module
 import id.pertadima.room.room.dao.NoteDao
 import id.pertadima.room.room.entity.Note
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -29,7 +28,7 @@ open class NoteRepository(application: Application) {
         noteDao.insert(note)
     }
 
-    fun getAllNotes(): Single<List<Note>> {
+    fun getAllNotes(): LiveData<List<Note>> {
         return noteDao.getAllNotes()
     }
 }

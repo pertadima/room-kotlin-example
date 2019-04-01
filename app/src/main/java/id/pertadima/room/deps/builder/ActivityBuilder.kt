@@ -1,7 +1,8 @@
-package id.pertadima.room.deps
+package id.pertadima.room.deps.builder
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import id.pertadima.room.deps.ActivityScoped
 import id.pertadima.room.ui.MainActivity
 
 /**
