@@ -12,4 +12,5 @@ This repo about example of using room persistance library in kotlin
   - Edit Notes
   - Delete Notes.
   
-![Overview](http://i66.tinypic.com/2sbs5qe.png)
+ # SCREENSHOOTS:
+![screenshoots](http://i66.tinypic.com/2sbs5qe.png)
