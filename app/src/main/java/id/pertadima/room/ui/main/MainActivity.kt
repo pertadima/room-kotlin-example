@@ -3,10 +3,10 @@ package id.pertadima.room.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import id.co.core.commons.DiffCallback
 import id.co.core.commons.GeneralRecyclerView
 import id.pertadima.room.R
@@ -56,6 +56,7 @@ class MainActivity : BaseActivity() {
     override fun onViewReady(savedInstanceState: Bundle?) {
         observeViewModel()
         initRecyclerView()
+        scrollRv()
         fab_add.setOnClickListener {
             startActivityForResult(Intent(this@MainActivity, AddNoteActivity::class.java), REQUEST_ADD)
         }
@@ -65,6 +66,22 @@ class MainActivity : BaseActivity() {
         with(rv_notes) {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+    }
+
+    private fun scrollRv() {
+        val scrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> fab_add.show()
+                    else -> fab_add.hide()
+                }
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        }
+        with(rv_notes) {
+            clearOnScrollListeners()
+            addOnScrollListener(scrollListener)
         }
     }
 

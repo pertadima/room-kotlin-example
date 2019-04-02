@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">KotlinRoomExample</string>
+    <string name="app_name">Notes App</string>
 
     <string name="empty_string"> </string>
 
-    <string name="text_add_notes">Add Note</string>
+    <string name="text_add_notes">Editor</string>
     <string name="text_save">Save</string>
 
-    <string name="text_title">Title</string>
+    <string name="text_title">Note Title</string>
     <string name="text_description">Description</string>
     <string name="text_not_null">Title or Description can not be null</string>
 
