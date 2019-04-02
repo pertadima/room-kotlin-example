@@ -1,34 +1,56 @@
 package id.pertadima.room.room
 
-import android.app.Application
+import android.content.Context
+import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import dagger.Module
 import id.pertadima.room.room.dao.NoteDao
 import id.pertadima.room.room.entity.Note
-import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by pertadima on 01,April,2019
  */
 
 @Module
-open class NoteRepository(application: Application) {
+open class NoteRepository(context: Context) {
 
     private lateinit var noteDao: NoteDao
-    protected var disposables = CompositeDisposable()
+    private lateinit var allNotes: LiveData<List<Note>>
 
     init {
-        val database: NoteDatabase? = NoteDatabase.getInstance(application.applicationContext)
-        database?.let {
+        NoteDatabase.getInstance(context)?.let {
             noteDao = it.noteDao()
+            allNotes = noteDao.getAllNotes()
         }
     }
 
     fun insert(note: Note) {
-        noteDao.insert(note)
+        DoInBackgroundAsync<Note> {
+            noteDao.insert(note)
+        }.execute()
     }
 
     fun getAllNotes(): LiveData<List<Note>> {
-        return noteDao.getAllNotes()
+        return allNotes
+    }
+
+    fun removeNote(note: Note) {
+        DoInBackgroundAsync<Note> {
+            noteDao.remove(note)
+        }.execute()
+    }
+
+    fun deleteAllNotes() {
+        DoInBackgroundAsync<Note> {
+            noteDao.deleteAllNotes()
+        }.execute()
+    }
+
+    private class DoInBackgroundAsync<T : Any>(
+        private val backgroundTask: () -> Unit
+    ) : AsyncTask<T, Unit, Unit>() {
+        override fun doInBackground(vararg params: T) {
+            backgroundTask.invoke()
+        }
     }
 }

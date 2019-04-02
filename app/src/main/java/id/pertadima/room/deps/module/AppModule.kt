@@ -16,12 +16,8 @@ import javax.inject.Singleton
         ActivityBuilder::class
     ]
 )
-open class AppModule {
+open class AppModule(private val application: Application) {
     @Provides
     @Singleton
-    fun providesApplication(): Application = Application()
-
-    @Provides
-    @Singleton
-    fun providesNoteInstanceRepository(application: Application): NoteRepository = NoteRepository(application)
+    fun providesNoteInstanceRepository(): NoteRepository = NoteRepository(application)
 }

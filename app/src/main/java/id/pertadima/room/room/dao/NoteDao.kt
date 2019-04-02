@@ -16,7 +16,7 @@ import id.pertadima.room.room.entity.Note
 @Dao
 interface NoteDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     fun insert(note: Note)
 
     @Query("DELETE FROM notes_table")

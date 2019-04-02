@@ -1,5 +1,4 @@
 package id.pertadima.room.deps
-
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
@@ -30,7 +29,6 @@ interface AppComponent : AndroidInjector<MainApp> {
     interface Builder {
         @BindsInstance
         fun create(app: Application): Builder
-
         fun appModule(appModule: AppModule): Builder
         fun build(): AppComponent
     }
