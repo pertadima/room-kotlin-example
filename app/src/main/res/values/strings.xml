@@ -11,5 +11,7 @@
     <string name="text_not_null">Title or Description can not be null</string>
 
     <string name="text_success_add_note">Successfully Add Note</string>
+    <string name="text_are_you_sure">Are you sure you want to delete %s ?</string>
     <string name="text_ok">OK</string>
+    <string name="text_cancel">Cancel</string>
 </resources>

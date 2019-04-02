@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.co.core.commons.DiffCallback
 import id.co.core.commons.GeneralRecyclerView
+import id.co.core.commons.showDialog
 import id.pertadima.room.R
 import id.pertadima.room.base.BaseActivity
 import id.pertadima.room.room.entity.Note
@@ -33,6 +34,7 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var diffCallback: DiffCallback
 
+    private val noteList = mutableListOf<Note>()
     private val notesAdapter by lazy {
         GeneralRecyclerView<Note>(
             diffCallback = diffCallback,
@@ -69,14 +71,18 @@ class MainActivity : BaseActivity() {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
 
-            val swipeHandler = object : SwipeControl(this@MainActivity, R.drawable.ic_edit, R.drawable.ic_delete) {
+            val swipeHandler = object : SwipeControl(
+                this@MainActivity,
+                R.drawable.ic_edit,
+                R.drawable.ic_delete
+            ) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     when (direction) {
                         SWIPE_RIGHT -> {
-
+                            editItem()
                         }
                         SWIPE_LEFT -> {
-
+                            deleteItem(viewHolder)
                         }
                     }
                 }
@@ -84,6 +90,25 @@ class MainActivity : BaseActivity() {
             val itemTouchHelper = ItemTouchHelper(swipeHandler)
             itemTouchHelper.attachToRecyclerView(this)
         }
+    }
+
+    private fun editItem() {
+
+    }
+
+    private fun deleteItem(viewHolder: RecyclerView.ViewHolder) {
+        val note = noteList[viewHolder.adapterPosition]
+        showDialog(
+            message = getString(R.string.text_are_you_sure, note.title),
+            cancelable = false,
+            positiveButton = getString(R.string.text_ok),
+            positiveAction = {
+                mainViewModel.removeNote(note)
+            },
+            negativeButton = getString(R.string.text_cancel),
+            negativeAction = {
+                notesAdapter.notifyDataSetChanged()
+            })
     }
 
     private fun scrollRv() {
@@ -105,6 +130,8 @@ class MainActivity : BaseActivity() {
     private fun observeViewModel() {
         with(mainViewModel) {
             getAllNotes().onResult {
+                noteList.clear()
+                noteList.addAll(it)
                 notesAdapter.setData(it)
             }
         }
