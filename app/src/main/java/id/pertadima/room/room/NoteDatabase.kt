@@ -29,7 +29,6 @@ abstract class NoteDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(context.applicationContext,
                         NoteDatabase::class.java, DB_NAME)
                         .fallbackToDestructiveMigration()
-                        .addCallback(roomCallback)
                         .build()
                 }
             }
@@ -38,25 +37,6 @@ abstract class NoteDatabase : RoomDatabase() {
 
         fun destroyInstance() {
             instance = null
-        }
-
-        private val roomCallback = object : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                PopulateDbAsyncTask(instance)
-                    .execute()
-            }
-        }
-    }
-
-    class PopulateDbAsyncTask(db: NoteDatabase?) : AsyncTask<Unit, Unit, Unit>() {
-        private val noteDao = db?.noteDao()
-
-        override fun doInBackground(vararg p0: Unit?) {
-            Log.e("IRFAN", "dsadsadadsadsadasdsada: ");
-            noteDao?.insert(Note("Title 1", "description 1"))
-            noteDao?.insert(Note("Title 2", "description 2"))
-            noteDao?.insert(Note("Title 3", "description 3"))
         }
     }
 }
