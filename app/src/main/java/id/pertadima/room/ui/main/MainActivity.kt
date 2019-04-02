@@ -45,8 +45,8 @@ class MainActivity : BaseActivity() {
             onBind = { model, view ->
                 setupNotes(view, model)
             },
-            itemListener = { model, _, _ ->
-
+            itemListener = { note, _, _ ->
+                intentEdit(note)
             }
         )
     }
@@ -105,18 +105,22 @@ class MainActivity : BaseActivity() {
             cancelable = false,
             positiveButton = getString(R.string.text_ok),
             positiveAction = {
-                startActivityForResult(
-                    Intent(this@MainActivity, AddNoteActivity::class.java).apply {
-                        putExtra(ID_NOTE_TAG, note.id)
-                        putExtra(TITLE_NOTE_TAG, note.title)
-                        putExtra(DESC_NOTE_TAG, note.description)
-                    }, REQUEST_EDIT
-                )
+                intentEdit(note)
             },
             negativeButton = getString(R.string.text_cancel),
             negativeAction = {
                 notesAdapter.notifyDataSetChanged()
             })
+    }
+
+    private fun intentEdit(note: Note) {
+        startActivityForResult(
+            Intent(this@MainActivity, AddNoteActivity::class.java).apply {
+                putExtra(ID_NOTE_TAG, note.id)
+                putExtra(TITLE_NOTE_TAG, note.title)
+                putExtra(DESC_NOTE_TAG, note.description)
+            }, REQUEST_EDIT
+        )
     }
 
     private fun deleteItem(viewHolder: RecyclerView.ViewHolder) {
