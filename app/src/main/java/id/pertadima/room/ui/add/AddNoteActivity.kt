@@ -19,9 +19,13 @@ import kotlinx.android.synthetic.main.default_toolbar.view.*
 
 class AddNoteActivity : BaseActivity() {
     companion object {
+        const val ID_NOTE_TAG = "ID_NOTE"
         const val TITLE_NOTE_TAG = "TITLE_NOTE"
         const val DESC_NOTE_TAG = "DESC_NOTE"
+        const val DEFAULT_INT_VALUE = 0
     }
+
+    private var idNote: Int = DEFAULT_INT_VALUE
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_add)
@@ -33,7 +37,11 @@ class AddNoteActivity : BaseActivity() {
     }
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-
+        intent.apply {
+            idNote = getIntExtra(ID_NOTE_TAG, DEFAULT_INT_VALUE)
+            et_title.setText(getStringExtra(TITLE_NOTE_TAG) ?: et_title.text.toString())
+            et_description.setText(getStringExtra(DESC_NOTE_TAG) ?: et_description.text.toString())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -54,13 +62,15 @@ class AddNoteActivity : BaseActivity() {
     private fun saveNote() {
         if (!et_title.text.isNullOrEmpty() || !et_description.text.isNullOrEmpty()) {
             showDialog(
-                message = getString(R.string.text_success_add_note),
+                message = if (idNote == 0) getString(R.string.text_success_add_note) else
+                    getString(R.string.text_success_edit_note, et_title.text.toString()),
                 cancelable = false,
                 positiveButton = getString(R.string.text_ok)
             ) {
                 val data = Intent().apply {
                     putExtra(TITLE_NOTE_TAG, et_title.text.toString())
                     putExtra(DESC_NOTE_TAG, et_description.text.toString())
+                    putExtra(ID_NOTE_TAG, idNote)
                 }
                 setResult(Activity.RESULT_OK, data)
                 finish()

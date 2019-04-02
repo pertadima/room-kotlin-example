@@ -34,17 +34,18 @@ open class NoteRepository(context: Context) {
         return allNotes
     }
 
+    fun updateNote(note: Note) {
+        DoInBackgroundAsync<Note> {
+            noteDao.update(note)
+        }.execute()
+    }
+
     fun removeNote(note: Note) {
         DoInBackgroundAsync<Note> {
             noteDao.remove(note)
         }.execute()
     }
 
-    fun deleteAllNotes() {
-        DoInBackgroundAsync<Note> {
-            noteDao.deleteAllNotes()
-        }.execute()
-    }
 
     private class DoInBackgroundAsync<T : Any>(
         private val backgroundTask: () -> Unit

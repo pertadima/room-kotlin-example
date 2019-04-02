@@ -26,4 +26,8 @@ class MainViewModel @Inject constructor(private val noteRepository: NoteReposito
     fun removeNote(note: Note) {
         noteRepository.removeNote(note)
     }
+
+    fun updateNote(note: Note) {
+        noteRepository.updateNote(note)
+    }
 }

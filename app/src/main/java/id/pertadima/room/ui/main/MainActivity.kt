@@ -15,7 +15,9 @@ import id.pertadima.room.R
 import id.pertadima.room.base.BaseActivity
 import id.pertadima.room.room.entity.Note
 import id.pertadima.room.ui.add.AddNoteActivity
+import id.pertadima.room.ui.add.AddNoteActivity.Companion.DEFAULT_INT_VALUE
 import id.pertadima.room.ui.add.AddNoteActivity.Companion.DESC_NOTE_TAG
+import id.pertadima.room.ui.add.AddNoteActivity.Companion.ID_NOTE_TAG
 import id.pertadima.room.ui.add.AddNoteActivity.Companion.TITLE_NOTE_TAG
 import id.pertadima.swipecontrol.SwipeControl
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class MainActivity : BaseActivity() {
     companion object {
         const val REQUEST_ADD = 1
+        const val REQUEST_EDIT = 2
     }
 
     @Inject
@@ -62,7 +65,10 @@ class MainActivity : BaseActivity() {
         initRecyclerView()
         scrollRv()
         fab_add.setOnClickListener {
-            startActivityForResult(Intent(this@MainActivity, AddNoteActivity::class.java), REQUEST_ADD)
+            startActivityForResult(
+                Intent(this@MainActivity, AddNoteActivity::class.java),
+                REQUEST_ADD
+            )
         }
     }
 
@@ -79,7 +85,7 @@ class MainActivity : BaseActivity() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     when (direction) {
                         SWIPE_RIGHT -> {
-                            editItem()
+                            editItem(viewHolder)
                         }
                         SWIPE_LEFT -> {
                             deleteItem(viewHolder)
@@ -92,14 +98,31 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun editItem() {
-
+    private fun editItem(viewHolder: RecyclerView.ViewHolder) {
+        val note = noteList[viewHolder.adapterPosition]
+        showDialog(
+            message = getString(R.string.text_are_you_sure_to_edit, note.title),
+            cancelable = false,
+            positiveButton = getString(R.string.text_ok),
+            positiveAction = {
+                startActivityForResult(
+                    Intent(this@MainActivity, AddNoteActivity::class.java).apply {
+                        putExtra(ID_NOTE_TAG, note.id)
+                        putExtra(TITLE_NOTE_TAG, note.title)
+                        putExtra(DESC_NOTE_TAG, note.description)
+                    }, REQUEST_EDIT
+                )
+            },
+            negativeButton = getString(R.string.text_cancel),
+            negativeAction = {
+                notesAdapter.notifyDataSetChanged()
+            })
     }
 
     private fun deleteItem(viewHolder: RecyclerView.ViewHolder) {
         val note = noteList[viewHolder.adapterPosition]
         showDialog(
-            message = getString(R.string.text_are_you_sure, note.title),
+            message = getString(R.string.text_are_you_sure_to_delete, note.title),
             cancelable = false,
             positiveButton = getString(R.string.text_ok),
             positiveAction = {
@@ -146,16 +169,26 @@ class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_ADD && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                mainViewModel.insertNoteList(
-                    Note(
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                data?.let {
+                    val note = Note(
                         it.getStringExtra(TITLE_NOTE_TAG),
                         it.getStringExtra(DESC_NOTE_TAG)
                     )
-                )
+                    if (requestCode == REQUEST_EDIT) {
+                        note.id = it.getIntExtra(ID_NOTE_TAG, DEFAULT_INT_VALUE)
+                        mainViewModel.updateNote(note)
+                    } else if (requestCode == REQUEST_ADD) {
+                        mainViewModel.insertNoteList(note)
+                    }
+                }
+            }
+            Activity.RESULT_CANCELED -> {
+                if (requestCode == REQUEST_EDIT) {
+                    notesAdapter.notifyDataSetChanged()
+                }
             }
         }
-
     }
 }
