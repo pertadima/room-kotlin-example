@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.co.core.commons.DiffCallback
@@ -15,6 +16,7 @@ import id.pertadima.room.room.entity.Note
 import id.pertadima.room.ui.add.AddNoteActivity
 import id.pertadima.room.ui.add.AddNoteActivity.Companion.DESC_NOTE_TAG
 import id.pertadima.room.ui.add.AddNoteActivity.Companion.TITLE_NOTE_TAG
+import id.pertadima.swipecontrol.SwipeControl
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.default_toolbar.view.*
 import kotlinx.android.synthetic.main.viewholder_note.view.*
@@ -66,6 +68,21 @@ class MainActivity : BaseActivity() {
         with(rv_notes) {
             adapter = notesAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
+
+            val swipeHandler = object : SwipeControl(this@MainActivity, R.drawable.ic_edit, R.drawable.ic_delete) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    when (direction) {
+                        SWIPE_RIGHT -> {
+
+                        }
+                        SWIPE_LEFT -> {
+
+                        }
+                    }
+                }
+            }
+            val itemTouchHelper = ItemTouchHelper(swipeHandler)
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
