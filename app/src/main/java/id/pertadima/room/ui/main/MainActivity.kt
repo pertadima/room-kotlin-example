@@ -3,6 +3,7 @@ package id.pertadima.room.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import id.pertadima.room.R
 import id.pertadima.room.base.BaseActivity
@@ -40,10 +41,9 @@ class MainActivity : BaseActivity() {
 
     private fun observeViewModel() {
         with(mainViewModel) {
-            observeNoteList().onResult {
+            getAllNotes().onResult {
 
             }
-            getNoteList()
         }
     }
 
@@ -58,7 +58,6 @@ class MainActivity : BaseActivity() {
                     )
                 )
             }
-            mainViewModel.getNoteList()
         }
 
     }

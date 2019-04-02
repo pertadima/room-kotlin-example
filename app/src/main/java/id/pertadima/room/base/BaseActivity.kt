@@ -22,7 +22,7 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
     private val disposables = CompositeDisposable()
 
     protected fun <T> LiveData<T>.onResult(action: (T) -> Unit) {
-        observe(this@BaseActivity, Observer { data -> data?.let(action) })
+        observe(this@BaseActivity, Observer { data: T -> data.let(action) })
     }
 
     protected fun Disposable.track() {
