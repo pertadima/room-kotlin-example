@@ -109,7 +109,7 @@ class MainActivity : BaseActivity() {
             },
             negativeButton = getString(R.string.text_cancel),
             negativeAction = {
-                notesAdapter.notifyDataSetChanged()
+                notesAdapter.notifyItemChanged(viewHolder.adapterPosition)
             })
     }
 
@@ -134,7 +134,7 @@ class MainActivity : BaseActivity() {
             },
             negativeButton = getString(R.string.text_cancel),
             negativeAction = {
-                notesAdapter.notifyDataSetChanged()
+                notesAdapter.notifyItemChanged(viewHolder.adapterPosition)
             })
     }
 
